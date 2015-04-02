@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Results</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+</head>
+<body ng-app="myApp" ng-controller="usersCtrl">
+	<nav class="navbar navbar-default navbar-static-top">
+	    <div class="container">
+	      <p style="padding-top: 11px; font-size: 20px; text-align: center"><b><a href="http://localhost:3000/">TDDM <-- press here to go to main page</a></b></p>
+	    </div>
+  	</nav>
+	<div class="row" style="padding: 25px 0 50px 0">
+    	<h1 class="text-center">TDDM Report</h1>
+  	</div>
+
+  	<div class="row" class="bg-info" style="padding: 20px 0; background-color: #f2efb3">
+  		<p style="text-align: center" >
+  			API Endpoint: 
+  			</br>
+  			<a href="{{apiEndPoint}}"><b>{{apiEndPoint}}</b></a>
+  		</p>
+  	</div>
+
+  	<div class="row">
+  		<div class="col-md-8 col-md-offset-2" >
+  			<h3>All users</h3>
+
+  			<table id="t01" class="table table-striped">
+			  <tr>
+			    <th>ID</th>
+			    <th>username</th> 
+			    <th>email</th>
+			    <th># of tweets</th>
+			  </tr>
+			  <tr ng-repeat="x in users">
+			    <td>{{x["id"]}}</td>
+			    <td>{{x["username"]}}</td> 
+			    <td>{{x["email"]}}</td>
+			    <td>{{x["#of Tweets"]}}</td>
+			  </tr>
+			</table>
+  		</div>
+	</div>
+
+	<div class="row">
+  		<div class="col-md-8 col-md-offset-2">
+  			<h3>Dead Activity</h3>
+
+  			<table id="t01" class="table table-striped">
+			  <tr>
+			    <th>ID</th>
+			    <th>username</th> 
+			    <th>email</th>
+			    <th># of tweets</th>
+			  </tr>
+			  <tr ng-repeat="x in deadusers">
+			    <td>{{x["id"]}}</td>
+			    <td>{{x["username"]}}</td> 
+			    <td>{{x["email"]}}</td>
+			    <td>{{x["#of Tweets"]}}</td>
+			  </tr>
+			</table>
+  		</div>
+	</div>
+
+	
+
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src=" https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+
+var apiHref = (window.location.href).replace(window.location.pathname, "/api" + window.location.pathname)
+
+var app = angular.module('myApp', []);
+app.controller('usersCtrl', function($scope, $http) {
+	$http.get(apiHref)
+	.success(function(data) {
+		$scope.users = data;
+		$scope.apiEndPoint = apiHref;
+		$scope.deadusers = data.filter(function(element) {
+			if (parseInt(element["#of Tweets"]) < 10) {
+				return element
+			}
+		})
+	});
+});
+
+</script>
+</html>
+
