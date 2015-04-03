@@ -3,9 +3,12 @@ var multer      =    require('multer');
 var app         =    express();
 var done        =    false;
 var parser      =    require('./parser');
-
+var path        =    require('path');
 
 var users = []
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 app.use(multer({ dest: './uploads/',
  rename: function (fieldname, filename) {
@@ -20,6 +23,8 @@ onFileUploadComplete: function (file) {
 }
 }));
 
+
+
 app.get('/',function(req,res){
   res.sendfile("index.html");
 });
@@ -29,8 +34,6 @@ app.get('/:filename',function(req,res){
   res.sendfile("results.html");
 });
 
-
-
 app.get('/api/:filename', function(req, res) {
 
     parser.parseFile(req.params.filename + '.csv', function(data) {
@@ -38,7 +41,6 @@ app.get('/api/:filename', function(req, res) {
       res.json(data)
     });
 });
-
 
 
 app.post('/api/load',function(req,res){
@@ -54,8 +56,6 @@ res.end(""
   "<a href='/" + (res.locals.filename).replace(".csv", "")+"'>click here to generate report</a>");
 }
 });
-
-
 
 
 app.listen(3000,function(){

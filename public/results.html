@@ -5,7 +5,7 @@
 	<title>Results</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css">
+	<link rel="stylesheet" href="/angular-chart.css">
 
 </head>
 <body ng-app="myApp" ng-controller="usersCtrl">
@@ -70,78 +70,47 @@
 	</div>
 
 	<div class="row" ng-controller="LineCtrl">
-		<div class="col-md-8 col-md-offset-2" >
-			<canvas id="bar" class="chart chart-bar" data="data"
+		<canvas id="bar" class="chart chart-bar" data="data"
   			labels="labels"></canvas> 
-  		</div>	
 	</div>
 
 	
-	<div class="row" ng-controller="DoughnutCtrl">
-		<div class="col-md-8 col-md-offset-2" >
-			<canvas id="doughnut" class="chart chart-doughnut" data="data"
-  labels="labels"></canvas>  
-  		</div>	
-	</div>
 
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="/bower_components/angular/angular.min.js"></script>
+<script src=" https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script src="/bower_components/Chart.js/Chart.min.js"></script>
-<script src="/bower_components/angular-chart.js/dist/angular-chart.js"></script>
+<script src="/angular-chart.js"></script>
 <script>
 
 var apiHref = (window.location.href).replace(window.location.pathname, "/api" + window.location.pathname)
+
 var app = angular.module('myApp', ["chart.js"]);
 
-app.factory('usersService', function($http) {
-  var usersService = {
-    async: function() {
-      var promise = $http.get(apiHref).then(function (response) {
-        console.log(response.data);
-        return response.data;
-      });
-      return promise;
-    }
-  };
-  return usersService;
-});
-
-app.controller('usersCtrl', function($scope, $http, usersService) {
-
-	usersService.async().then(function(d) {
-	    $scope.users = d;
-	    $scope.apiEndPoint = apiHref;
-	    $scope.deadusers = d.filter(function(element) {
+app.controller('usersCtrl', function($scope, $http) {
+	$http.get(apiHref)
+	.success(function(data) {
+		$scope.users = data;
+		$scope.apiEndPoint = apiHref;
+		$scope.deadusers = data.filter(function(element) {
 			if (parseInt(element["#of Tweets"]) < 10) {
 				return element
 			}
-		});
-  	});
+		})
+	});
 });
 
-app.controller("LineCtrl", function ($scope, usersService) {
+app.controller("LineCtrl", function ($scope) {
 
   $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
   $scope.series = ['Series A', 'Series B'];
   $scope.data = [
-    [50, 59, 80, 81, 56, 55, 40],
+    [65, 59, 80, 81, 56, 55, 40],
     [28, 48, 40, 19, 86, 27, 90]
   ];
   $scope.onClick = function (points, evt) {
     console.log(points, evt);
   };
-});
-
-app.controller("DoughnutCtrl", function ($scope, usersService) {
-	usersService.async().then(function(d) {
-	    $scope.users = d;
-	    $scope.labels = ["Spammer", "Active", "Normal", "Passive", "Dead"];
-  		$scope.data = [d.length, 40, 30, 10, 5];
-  	});
-
-  
 });
 
 </script>
