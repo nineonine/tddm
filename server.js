@@ -36,25 +36,28 @@ app.get('/:filename',function(req,res){
 
 app.get('/api/:filename', function(req, res) {
 
-    parser.parseFile(req.params.filename + '.csv', function(data) {
+  parser.parseFile(req.params.filename + '.csv', function(data) {
 
-      res.json(data)
-    });
+    res.json(data)
+  });
 });
 
 
 app.post('/api/load',function(req,res){
+
+
   if(done==true){
 
-    console.log(req.files)
+     console.log(req.files)
 
+     res.locals.filename = req.files.userFile.name
 
-res.locals.filename = req.files.userFile.name
+     res.end(""
+      +"<p>File uploaded. \nfile name: " + res.locals.filename + "</p><p>" + 
+      "<a href='/" + (res.locals.filename).replace(".csv", "")+"'>click here to generate report</a>");
 
-res.end(""
-  +"<p>File uploaded. \nfile name: " + res.locals.filename + "</p><p>" + 
-  "<a href='/" + (res.locals.filename).replace(".csv", "")+"'>click here to generate report</a>");
-}
+   }
+
 });
 
 

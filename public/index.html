@@ -4,12 +4,23 @@
 <head>
   <title>TDDM</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <script type="text/javascript">
+
+      var file_selected = false;
+      function showNoFile() {
+       if(!file_selected) { 
+          alert('No file selected!');
+          console.log(file_selected);
+        } // or anything else
+      }
+
+  </script>
 </head>
 <body>
 
   <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
-      <p style="padding-top: 11px; font-size: 20px; text-align: center"><b><a href="http://localhost:3000/">TDDM <-- press here to go to main page</a></b></p>
+      <p style="padding-top: 11px; font-size: 20px; text-align: center"><b><a href="/">TDDM <-- press here to go to main page</a></b></p>
     </div>
   </nav>
 
@@ -28,10 +39,10 @@
         <div style="margin-left: 70px;
           margin-right: auto;
           padding-bottom: 40px">
-          <input type="file" name="userFile" />
+          <input type="file" name="userFile" onchange="file_selected = true;" />
         </div>
         </br>
-          <input type="submit" class="btn btn-success" value="Upload File" name="submit">
+          <input type="submit" class="btn btn-success" value="Upload File" onclick="showNoFile()" name="submit">
         </form>
       </center>
     </div>
@@ -43,14 +54,14 @@
     </div>
   </div>
 
-  
+
   <div class="row" style="text-align: center !important; background-color: #ededed">
     <div class="col-md-6 col-md-offset-3" style="padding-bottom: 30px; padding-top: 30px; text-align: center !important">
       <h4> Twitter Data Decision Maker</h4>
       <p>Alex Dudarenko</p>
       <p>Sahil Singh</p>
       <p>Sara Rosentreter</p>
-      <p>Dmitry Shylofsky</p>
+      <p>Dmitry Shilovskiy</p>
     </div>
   </div>
 

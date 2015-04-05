@@ -1,8 +1,12 @@
 <script>
-  $(document).ready(function() {
+$(document).ready(function() {
+  file_selected = false;
 
-    $('#uploadForm').submit(function() {
+  $('#uploadForm').submit(function() {
 
+    
+    if(file_selected) {
+      console.log("DEBUG")
       $(this).ajaxSubmit({
 
         error: function(xhr) {
@@ -16,7 +20,10 @@
       });
       //Very important line, it disable the page refresh.
       return false;
-    });    
-    
-  });
+
+    }
+
+  });    
+
+});
 </script>
