@@ -7,6 +7,8 @@ var path        =    require('path');
 
 var users = []
 
+app.set('port', (process.env.PORT || 3000))
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
@@ -48,19 +50,23 @@ app.post('/api/load',function(req,res){
 
   if(done==true){
 
-     console.log(req.files)
+    if(req.files) {
+      console.log(req.files)
 
-     res.locals.filename = req.files.userFile.name
+      res.locals.filename = req.files.userFile.name
 
-     res.end(""
+      res.end(""
       +"<p>File uploaded. \nfile name: " + res.locals.filename + "</p><p>" + 
       "<a href='/" + (res.locals.filename).replace(".csv", "")+"'>click here to generate report</a>");
 
-   }
+    }
+    res.redirect('/');
+
+  }
 
 });
 
 
-app.listen(3000,function(){
+app.listen(app.get('port'),function(){
   console.log("Working on port 3000");
 });
