@@ -26,23 +26,59 @@
   		</p>
   	</div>
 
-  	<div class="row" style="padding: 20px 0 20px 0">
-  		<div class="col-md-8 col-md-offset-2" >
-  			<h3>All users</h3>
+  	<div class="row" style="text-align: center; padding-top: 30px">
+  		<h3>Overview <span class="label label-info">Info</span></h3>
+  	</div>
+  	<div class="row" style="padding-top: 50px; text-align: center !important; padding-bottom: 50px"> 
+  		<div class="col-md-4 col-md-offset-2">
+  			<p>Filename: </p>
+  			<p><strong>{{fileName}}</strong></p>
+  			<p>Numbers of records: </p>
+  			<p><strong>{{users.length}}</strong></p>
+  			<p>Average Age: </p>
+  			<p><strong>{{+ageSum["Age"]/users.length | number:0}}</strong></p>
+  			<p>Average # of tweets /p day: </p>
+  			<p><strong>{{+avgTweetsSum["#of Tweets / day"]/users.length | number:0}}</strong></p>
+  		</div>
+  		<div class="col-md-4" ng-controller="DoughnutCtrl">
+			<canvas id="doughnut" class="chart chart-doughnut" data="data" legend="true" 
+  			labels="labels"></canvas>  
+  		</div>
+  	</div>
 
+  	<div class="row" style="text-align: center; padding-bottom: 30px">
+  		<h3>Trend of new users by gender <span class="label label-info">Info</span></h3>
+  	</div>
+  	<div class="row">
+  		<div class="col-md-8 col-md-offset-2" ng-controller="LineCtrl">
+			<canvas id="bar" class="chart chart-bar" data="data" legend="true" series="series"
+  			labels="labels"></canvas> 
+  		</div>	
+  	</div>
 
+	<div class="row">
+  		<div class="col-md-8 col-md-offset-2">
+  			<h3>Dead Activity <span class="label label-warning">Warning</span></h3>
+
+  			<div class="alert alert-warning" role="alert">
+  				<p>
+  					Users who didnt show up for the last two months
+  				</p>
+  			</div>
   			<table id="t01" class="table table-striped">
 			  <tr>
 			    <th>ID</th>
 			    <th>username</th> 
 			    <th>email</th>
-			    <th># of tweets</th>
+			    <th>days since last tweet</th>
+			    <th>days since last login</th>
 			  </tr>
-			  <tr ng-repeat="x in users">
+			  <tr ng-repeat="x in deadusers">
 			    <td>{{x["id"]}}</td>
 			    <td>{{x["username"]}}</td> 
 			    <td>{{x["email"]}}</td>
-			    <td>{{x["#of Tweets"]}}</td>
+			    <td>{{x["days since last tweet"]}}</td>
+			    <td>{{x["days since last login"]}}</td>
 			  </tr>
 			</table>
   		</div>
@@ -50,39 +86,97 @@
 
 	<div class="row">
   		<div class="col-md-8 col-md-offset-2">
-  			<h3>Dead Activity</h3>
+  			<h3>Spammers <span class="label label-danger">Danger</span></h3>
 
-  			<table id="t01" class="table table-striped">
+  			<div class="alert alert-danger" role="alert">
+  				<p>
+  					Users who have an average of > 25 tweets per day since the account creation day.
+  				</p>
+  			</div>
+
+  			<table id="t02" class="table table-striped">
 			  <tr>
 			    <th>ID</th>
 			    <th>username</th> 
 			    <th>email</th>
-			    <th># of tweets</th>
+			    <th>#of Tweets / day</th>
 			  </tr>
-			  <tr ng-repeat="x in deadusers">
+			  <tr ng-repeat="x in spammers">
 			    <td>{{x["id"]}}</td>
 			    <td>{{x["username"]}}</td> 
 			    <td>{{x["email"]}}</td>
-			    <td>{{x["#of Tweets"]}}</td>
+			    <td>{{x["#of Tweets / day"]}}</td>
 			  </tr>
 			</table>
   		</div>
 	</div>
 
-	<div class="row" ng-controller="LineCtrl">
-		<div class="col-md-8 col-md-offset-2" >
-			<canvas id="bar" class="chart chart-bar" data="data"
-  			labels="labels"></canvas> 
-  		</div>	
+	<div class="row">
+  		<div class="col-md-8 col-md-offset-2">
+  			<h3>No Personal Information <span class="label label-info">Info</span></h3>
+
+  			<div class="alert alert-info" role="alert">
+  				<p>
+  					Business users who dont have avatar icon and profile description but with a decent level of activity. 
+  				</p>
+  			</div>
+
+  			<table id="t04" class="table table-striped">
+			  <tr>
+			    <th>ID</th>
+			    <th>username</th> 
+			    <th>email</th>
+			  </tr>
+			  <tr ng-repeat="x in noaccdescr">
+			    <td>{{x["id"]}}</td>
+			    <td>{{x["username"]}}</td> 
+			    <td>{{x["email"]}}</td>
+			  </tr>
+			</table>
+  		</div>
 	</div>
 
-	
-	<div class="row" ng-controller="DoughnutCtrl">
-		<div class="col-md-8 col-md-offset-2" >
-			<canvas id="doughnut" class="chart chart-doughnut" data="data"
-  labels="labels"></canvas>  
-  		</div>	
+	<div class="row" style="margin-bottom: 20px">
+  		<div class="col-md-8 col-md-offset-2">
+  			<h3>Suspicious bevahiour <span class="label label-warning">Warning</span></h3>
+
+  			<div class="alert alert-warning" role="alert">
+  				<p>
+  					Users who are following way more than they are being followed. Might be bot aswell. 
+  				</p>
+  			</div>
+
+  			<table id="t03" class="table table-striped">
+			  <tr>
+			    <th>ID</th>
+			    <th>username</th> 
+			    <th>email</th>
+			    <th># of Followers</th>
+			    <th># Following</th>
+			  </tr>
+			  <tr ng-repeat="x in suspicious">
+			    <td>{{x["id"]}}</td>
+			    <td>{{x["username"]}}</td> 
+			    <td>{{x["email"]}}</td>
+			    <td>{{x["# of Followers"]}}</td>
+			    <td>{{x["# Following"]}}</td>
+			  </tr>
+			</table>
+  		</div>
 	</div>
+
+
+	<div class="row" style="text-align: center !important; background-color: #ededed">
+		<div class="col-md-6 col-md-offset-3" style="padding-bottom: 30px; padding-top: 30px; text-align: center !important">
+			<h4> Twitter Data Decision Maker</h4>
+			<p>Alex Dudarenko</p>
+			<p>Sahil Singh</p>
+			<p>Sara Rosentreter</p>
+			<p>Dmitry Shylofsky</p>
+		</div>
+	</div>
+	
+
 
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -99,7 +193,6 @@ app.factory('usersService', function($http) {
   var usersService = {
     async: function() {
       var promise = $http.get(apiHref).then(function (response) {
-        console.log(response.data);
         return response.data;
       });
       return promise;
@@ -113,8 +206,33 @@ app.controller('usersCtrl', function($scope, $http, usersService) {
 	usersService.async().then(function(d) {
 	    $scope.users = d;
 	    $scope.apiEndPoint = apiHref;
+	   	$scope.ageSum = d.reduce(function(previousValue, currentValue, index, array) {
+	   	 			 return {Age: parseInt(previousValue["Age"]) + parseInt(currentValue["Age"])}
+	   	});
+	   	$scope.avgTweetsSum = d.reduce(function(previousValue, currentValue, index, array) {
+	   	 			 return {"#of Tweets / day": parseInt(previousValue["#of Tweets / day"]) + parseInt(currentValue["#of Tweets / day"])}
+	   	});	 	 
+	    $scope.fileName = window.location.pathname + '.csv';
 	    $scope.deadusers = d.filter(function(element) {
-			if (parseInt(element["#of Tweets"]) < 10) {
+			if (parseInt(element["days since last tweet"]) > 60 && parseInt(element["days since last login"]) > 60 ) {
+				return element
+			}
+		});
+		$scope.spammers = d.filter(function(element) {
+			if (parseInt(element["#of Tweets / day"]) >= 25 && element["Business or personal"] == "personal") {
+				return element;
+			}
+		});
+		$scope.suspicious = d.filter(function(element) {
+			if( parseInt(element["# of Followers"])*75 < parseInt(element["# Following"]) && element["Business or personal"] == "personal" ) {
+				return element
+			}
+		});
+		$scope.noaccdescr = d.filter(function(element) {
+			if(element["Profile pic?"] != "1" 
+				&& element["Profile description?"] != "1" 
+				&& element["Business or personal"] == "business"
+				&& parseInt(element["#of Tweets / day"]) > 15) {
 				return element
 			}
 		});
@@ -123,22 +241,158 @@ app.controller('usersCtrl', function($scope, $http, usersService) {
 
 app.controller("LineCtrl", function ($scope, usersService) {
 
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
-  $scope.data = [
-    [50, 59, 80, 81, 56, 55, 40],
-    [28, 48, 40, 19, 86, 27, 90]
-  ];
-  $scope.onClick = function (points, evt) {
-    console.log(points, evt);
-  };
+	usersService.async().then(function(d) {
+	    $scope.labels = ["2008", "2009", "2010", "2011", "2012", "2013", "2014"];
+		$scope.series = ['Male', 'Female'];
+		$scope.firstM = d.filter(function(element) {
+			if (+(element["days since ac creation"]) < 365 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.secondM = d.filter(function(element) {
+			if (+element["days since ac creation"] < 730 && +element["days since ac creation"] >= 365 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.thirdM = d.filter(function(element) {
+			if (+element["days since ac creation"] < 1095 && +element["days since ac creation"] >= 730 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.fourthM = d.filter(function(element) {
+			if (+element["days since ac creation"] < 1460 && +element["days since ac creation"] >= 1095 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.fifthM = d.filter(function(element) {
+			if (+element["days since ac creation"] < 1825 && +element["days since ac creation"] >= 1460 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.sixthM = d.filter(function(element) {
+			if (+element["days since ac creation"] < 2190 && +element["days since ac creation"] >= 1825 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.seventhM = d.filter(function(element) {
+			if (+element["days since ac creation"] >= 2190 
+				&& element["Gender"] == "M") {
+				return element;
+			}
+		});
+		$scope.firstF = d.filter(function(element) {
+			if (+(element["days since ac creation"]) < 365 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.secondF = d.filter(function(element) {
+			if (+element["days since ac creation"] < 730 && +element["days since ac creation"] >= 365 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.thirdF = d.filter(function(element) {
+			if (+element["days since ac creation"] < 1095 && +element["days since ac creation"] >= 730 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.fourthF = d.filter(function(element) {
+			if (+element["days since ac creation"] < 1460 && +element["days since ac creation"] >= 1095 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.fifthF = d.filter(function(element) {
+			if (+element["days since ac creation"] < 1825 && +element["days since ac creation"] >= 1460 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.sixthF = d.filter(function(element) {
+			if (+element["days since ac creation"] < 2190 && +element["days since ac creation"] >= 1825 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.seventhF = d.filter(function(element) {
+			if (+element["days since ac creation"] >= 2190 
+				&& element["Gender"] == "F") {
+				return element;
+			}
+		});
+		$scope.data = [[
+   			$scope.seventhM.length,
+   			$scope.sixthM.length,
+   			$scope.fifthM.length,
+   			$scope.fourthM.length,
+   			$scope.thirdM.length,
+   			$scope.secondM.length,
+   			$scope.firstM.length
+  		],[
+			$scope.seventhF.length,
+   			$scope.sixthF.length,
+   			$scope.fifthF.length,
+   			$scope.fourthF.length,
+   			$scope.thirdF.length,
+   			$scope.secondF.length,
+   			$scope.firstF.length
+  		]];
+  		$scope.onClick = function (points, evt) {
+    		console.log(points, evt);
+  		};
+  	});
+
+ 
 });
 
 app.controller("DoughnutCtrl", function ($scope, usersService) {
 	usersService.async().then(function(d) {
+		$scope.spammer = d.filter(function(element) {
+			if(+element["#of Tweets / day"] > 25) {
+				return element
+			}
+		});
+		$scope.superActive = d.filter(function(element) {
+			if(+element["#of Tweets / day"] > 15 && +element["#of Tweets / day"] <= 25) {
+				return element
+			}
+		});
+		$scope.active = d.filter(function(element) {
+			if(+element["#of Tweets / day"] > 7 && +element["#of Tweets / day"] <= 15) {
+				return element
+			}
+		});
+		$scope.normal = d.filter(function(element) {
+			if(+element["#of Tweets / day"] > 0 && +element["#of Tweets / day"] <= 7) {
+				return element
+			}
+		});
+		$scope.passive = d.filter(function(element) {
+			if(+element["days since last tweet"] > 25 && +element["#of Tweets / day"] < 3) {
+				return element
+			}
+		});
+		$scope.dead = d.filter(function(element) {
+			if (parseInt(element["days since last tweet"]) > 60 && parseInt(element["days since last login"]) > 60 ) {
+				return element
+			}
+		});
 	    $scope.users = d;
-	    $scope.labels = ["Spammer", "Active", "Normal", "Passive", "Dead"];
-  		$scope.data = [d.length, 40, 30, 10, 5];
+	    $scope.labels = ["Spammer", "Super Active", "Active", "Normal", "Passive", "Dead"];
+  		$scope.data = [$scope.spammer.length,
+  		$scope.superActive.length,
+  		$scope.active.length,
+  		$scope.normal.length,
+  		$scope.passive.length,
+  		$scope.dead.length];
   	});
 
   
